@@ -1,0 +1,13 @@
+# MAC
+*Icon*
+*.DS_Store
+
+# Data files
+*.hdf5
+*.gz
+*.zip
+
+
+*.pyc
+
+files

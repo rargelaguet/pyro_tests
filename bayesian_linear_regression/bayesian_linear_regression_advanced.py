@@ -50,6 +50,8 @@ train = torch.tensor(df.values, dtype=torch.float)
 ## Model ##
 ###########
 
+# (Q) Why no plate is specified for the features??
+
 def model(x_1, x_2, y):
 
     # bias

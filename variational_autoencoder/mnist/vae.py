@@ -112,7 +112,6 @@ class VAE(nn.Module):
             # - loc_img has dimensions (batch_size, 784)
             # - loc_img contains rates of Bernoulli distributions
             loc_img = self.decoder.forward(z)
-            import pdb; pdb.set_trace()
 
             # sample images using the Bernoulli distributions and score against the actual images
             pyro.sample("obs", dist.Bernoulli(loc_img).to_event(1), obs=x)
@@ -141,28 +140,3 @@ class VAE(nn.Module):
     #     loc_img = self.decoder(z)
     #     return loc_img
 
-
-###########################################
-## Functions to train and test the model ##
-###########################################
-
-# Train
-def train(svi, train_loader):
-    epoch_loss = 0.
-    for x, _ in train_loader:
-        epoch_loss += svi.step(x)
-
-    # step() returns a noisy estimate of the loss. This estimate is not normalized, and it scales with the size of the mini-batch
-    normalizer_train = len(train_loader.dataset)
-    total_epoch_loss_train = epoch_loss / normalizer_train
-    return total_epoch_loss_train
-
-
-# Test
-def evaluate(svi, test_loader):
-    test_loss = 0.
-    for x, _ in test_loader:
-        test_loss += svi.evaluate_loss(x)
-    normalizer_test = len(test_loader.dataset)
-    total_epoch_loss_test = test_loss / normalizer_test
-    return total_epoch_loss_test
