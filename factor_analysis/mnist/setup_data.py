@@ -1,0 +1,1 @@
+../../variational_autoencoder/mnist/setup_data.py

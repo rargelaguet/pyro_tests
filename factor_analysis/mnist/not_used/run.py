@@ -6,7 +6,7 @@ import torch
 import pyro
 from pyro.infer import SVI, Trace_ELBO
 from pyro.optim import Adam
-assert pyro.__version__.startswith('1.3.0')
+assert pyro.__version__.startswith('1.3')
 
 from setup_data import *
 from fa import *

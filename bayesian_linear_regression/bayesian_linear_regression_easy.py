@@ -27,7 +27,7 @@ pyro.enable_validation(True)
 ## Hyperparameters ##
 #####################
 
-num_iterations = 10
+num_iterations = 1000
 
 learning_rate = 0.01
 
@@ -123,8 +123,8 @@ from pyro.infer import SVI, Trace_ELBO
 # Initialise model
 model = BayesianRegression(nfeatures=3)
 
-# Define guide
-guide = AutoDiagonalNormal(model) # mean-field assumption
+# Define guide: mean-field
+guide = AutoDiagonalNormal(model)
 
 # Define optimiser
 optim = pyro.optim.Adam({"lr": learning_rate})
@@ -148,6 +148,7 @@ for j in range(num_iterations):
     loss = svi.step(x_data, y_data)
     print("[iteration %04d] ELBO: %.4f" % (j + 1, loss / len(data)))
         
+
 
 #####################################
 ## Inspect posterior distributions ##
