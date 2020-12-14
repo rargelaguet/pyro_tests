@@ -56,7 +56,7 @@ def evaluate(svi, test_loader):
 LEARNING_RATE = 1.0e-3
 
 # Run only for a single iteration for testing
-NUM_EPOCHS = 2
+NUM_EPOCHS = 100
 TEST_FREQUENCY = 1
 
 
@@ -78,9 +78,13 @@ pyro.clear_param_store()
 # setup the Factor Analysis model
 fa = FA()
 
-# setup the inference algorithm
+# Define guide using automatic ELBO with mean-field assumption
 guide = AutoNormal(fa)
+
+# Defineg guide manually
 # guide = fa.guide
+
+
 optim = Adam({"lr": LEARNING_RATE})
 svi = SVI(fa.forward, guide = guide, optim = optim, loss = Trace_ELBO())
 
@@ -91,7 +95,7 @@ test_elbo = []
 for epoch in range(NUM_EPOCHS):
     total_epoch_loss_train = train(svi, train_loader)
     train_elbo.append(-total_epoch_loss_train)
-    print("[epoch %03d]  average training loss: %.4f" % (epoch, total_epoch_loss_train))
+    # print("[epoch %03d]  average training loss: %.4f" % (epoch, total_epoch_loss_train))
 
     if epoch % TEST_FREQUENCY == 0:
         total_epoch_loss_test = evaluate(svi, test_loader)

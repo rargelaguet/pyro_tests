@@ -49,21 +49,16 @@ class FA(nn.Module):
             # (Q) Why is .to_event(1) required?
             # (ANSWER) Latent dimensions must be modelled with a Multivariate Normal
             Z = pyro.sample("Z", dist.Normal(z_loc, z_scale).to_event(1))
+            
+            # sample images using the Bernoulli distributions and score against the actual images
             # (Q) Why is .to_event(1) required?
             # (ANSWER) Batch_shape = [256] (samples), event_shape = 784 (features)
-            # sample images using the Bernoulli distributions and score against the actual images
             ZW = self.sigmoid(torch.matmul(Z,W.T))
             X = pyro.sample("X", dist.Bernoulli(ZW).to_event(1), obs=x)
 
         return Z,W
 
-    # def reconstruct_img(self, x):
-    #     W,Z = self.forward(x)
-    #     # decode the image (note we don't sample in image space)
-    #     loc_img = self.decoder(z)
-    #     return loc_img
-
-    # # define the guide: variational distributions q(z|x) for each unobserved variable
+    # define the guide: variational distributions q(z|x) for each unobserved variable
     def guide(self, x):
         """ x is a torch.Tensor of size (batch_size,784) """
 
@@ -81,3 +76,9 @@ class FA(nn.Module):
             # pyro.sample("Z", pyro.distributions.Normal(qz_loc,qz_scale))
             pyro.sample("Z", pyro.distributions.Normal(qz_loc,qz_scale).to_event(1))
 
+
+    # def reconstruct_img(self, x):
+    #     W,Z = self.forward(x)
+    #     # decode the image (note we don't sample in image space)
+    #     loc_img = self.decoder(z)
+    #     return loc_img

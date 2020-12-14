@@ -66,11 +66,12 @@ pyro.clear_param_store()
 fa = FA(nfactors=10)
 
 # Load NUTS algorithm (Hamiltonian Monte Carlo)
-nuts_kernel = pyro.infer.mcmc.NUTS(fa.model, adapt_step_size=True)
+nuts_kernel = pyro.infer.mcmc.NUTS(fa.forward, adapt_step_size=True)
 
 # Run MCMC
 model = pyro.infer.mcmc.MCMC(kernel = nuts_kernel, num_samples = NUM_SAMPLES, warmup_steps = WARMUP_STEPS, num_chains = NUM_CHAINS)
 model.run(x=X_train)
+
 
 ###################################
 ## Query posterior distributions ##
